@@ -8,7 +8,7 @@ acf(laird.ts)
 lairdd.ts = diff(laird.ts, lag = 12)
 acf(lairdd.ts)
 
-lair.arima <- arima(lair.ts,order=c(0,1,1),list(order=c(0,1,1),period=12))
+lair.arima <- arima(lair.ts, order=c(0,1,1), seasonal=list(order=c(0,1,1), period=12))
 
 tsdiag(lair.arima)
 

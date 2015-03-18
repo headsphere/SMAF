@@ -1,0 +1,52 @@
+---
+title: "Exercise 7"
+output:
+  html_document:
+    toc: true
+    theme: united
+    highlight: pygments
+    number_sections: false
+---
+```{r message=FALSE, echo=FALSE}
+library(zoo)
+```
+
+###Q1
+```{r}
+sheep.zoo = read.zoo("Sheep.dat")
+
+sheep.ts = as.ts(sheep.zoo)
+plot(sheep.ts)
+acf(sheep.ts)
+
+sheepd.ts = diff(sheep.ts)
+plot(sheepd.ts)
+acf(sheepd.ts,lag=50)
+
+sheep.ar1.arima = arima(sheep.ts, c(1,1,0))
+sheep.ar2.arima = arima(sheep.ts, c(2,1,0))
+sheep.ar3.arima = arima(sheep.ts, c(3,1,0))
+sheep.ma1.arima = arima(sheep.ts, c(0,1,1))
+sheep.ma2.arima = arima(sheep.ts, c(0,1,2))
+sheep.ma3.arima = arima(sheep.ts, c(0,1,3))
+
+sheep.ar1.arima
+tsdiag(sheep.ar1.arima, gof.lag = 24)
+
+sheep.ar2.arima
+tsdiag(sheep.ar2.arima, gof.lag = 24)
+
+sheep.ar3.arima
+tsdiag(sheep.ar3.arima, gof.lag = 24)
+
+sheep.ma1.arima
+tsdiag(sheep.ma1.arima, gof.lag = 24)
+
+sheep.ma2.arima
+tsdiag(sheep.ma2.arima, gof.lag = 24)
+
+sheep.ma3.arima
+tsdiag(sheep.ma3.arima, gof.lag = 24)
+
+```
+
