@@ -1,0 +1,6 @@
+bread.zoo = read.zoo("Bread.dat")
+bread.ts = as.ts(bread.zoo)
+summary(bread.ts)
+plot(bread.ts)
+bread.acf = acf(bread.ts, type='partial')
+bread.arima = arima(bread.ts, order = c(1,0,0))
