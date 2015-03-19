@@ -9,6 +9,7 @@ output:
 ---
 ```{r message=FALSE, echo=FALSE}
 library(zoo)
+library(tseries)
 ```
 
 ###Q1
@@ -73,4 +74,18 @@ tsdiag(lcanada.arima)
 
 The fitted model is:
 
-$$ T_t = T_{t-1} + Y_{t-12} - Y_{t-13} + \epsilon_t `r lcanada.arima$coef[1]` \epsilon_{t-1} `r lcanada.arima$coef[2]` \epsilon_{t-12} + \text{ TODO } \epsilon_{t-13}$$
+$$ T_t = T_{t-1} + Y_{t-12} - Y_{t-13} + \epsilon_t `r lcanada.arima$coef[1]` \epsilon_{t-1} `r lcanada.arima$coef[2]` \epsilon_{t-12} + `r lcanada.arima$coef[1] * lcanada.arima$coef[2] ` \epsilon_{t-13}$$
+
+###Q3
+
+```{r}
+djao.ts = read.ts("DJAO.dat", names=c("DJ", "AO"))
+plot(djao.ts)
+
+lreturns.ts = diff(log(djao.ts))
+plot(lreturns.ts)
+
+acf(lreturns.ts[,"DJ"])
+acf(lreturns.ts[,"AO"])
+```
+
