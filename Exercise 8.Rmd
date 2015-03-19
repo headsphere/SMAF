@@ -1,0 +1,31 @@
+---
+title: "Exercise 8"
+output:
+  html_document:
+    toc: true
+    theme: united
+    highlight: pygments
+    number_sections: false
+---
+```{r message=FALSE, echo=FALSE}
+library(zoo)
+library(tseries)
+```
+
+###Q2
+
+```{r}
+djao.ts = read.ts("DJAO.dat", names=c("DJ", "AO"))
+
+lreturns.ts = diff(log(djao.ts))
+
+ccf(lreturns.ts[,"DJ"],lreturns.ts[,"AO"])
+
+lreturns.ar = ar(lreturns.ts, order.max = 10)
+
+lreturns.ar
+```
+
+$$X_t = `r lreturns.ar$ar[1]` X_{t-1} + `r lreturns.ar$ar[3]` Y_{t-1} + \epsilon_t$$
+
+$$Y_t = `r lreturns.ar$ar[2]` X_{t-1} + `r lreturns.ar$ar[4]` Y_{t-1} + \epsilon_t$$
