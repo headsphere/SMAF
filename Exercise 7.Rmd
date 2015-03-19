@@ -50,3 +50,27 @@ tsdiag(sheep.ma3.arima, gof.lag = 24)
 
 ```
 
+###Q2
+```{r}
+canada.zoo <- read.zoo("Canadata.dat", 
+                        index.column = 2:3, 
+                        FUN = function(year, month){ as.yearmon(paste(year, month, sep = "-"))})
+canada.ts = as.ts(canada.zoo)
+plot(canada.ts)
+lcanada.ts = log(canada.ts)
+plot(lcanada.ts)
+acf(lcanada.ts)
+
+acf(diff(lcanada.ts, lag = 12))
+acf(diff(diff(lcanada.ts),lag = 12))
+
+lcanada.arima = arima(lcanada.ts, order = c(0,1,1), seasonal = list(order=c(0,1,1), period=12))
+
+lcanada.arima
+
+tsdiag(lcanada.arima)
+```
+
+The fitted model is:
+
+$$ T_t = T_{t-1} + Y_{t-12} - Y_{t-13} + \epsilon_t `r lcanada.arima$coef[1]` \epsilon_{t-1} `r lcanada.arima$coef[2]` \epsilon_{t-12} + \text{ TODO } \epsilon_{t-13}$$
