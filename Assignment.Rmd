@@ -1,0 +1,31 @@
+---
+title: "Stochastic Process and Forecasting Assignment"
+author: "Nick Head"
+date: "15 April 2015"
+output: pdf_document
+---
+```{r}
+library(zoo)
+latdol.zoo <- read.zoo("LatDol.dat", 
+                        index.column = 1:2, 
+                        FUN = function(year, month){ as.yearmon(paste(year, month, sep = "-"))})
+colnames(latdol.zoo) = c("Avg", "End")
+
+plot(latdol.zoo)
+plot(diff(latdol.zoo))
+acf(latdol.zoo$Avg)
+acf(diff(latdol.zoo$Avg))
+
+acf(latdol.zoo$End)
+acf(diff(latdol.zoo$End))
+
+library(forecast)
+fitAvg <- auto.arima(latdol.zoo$Avg)
+plot(forecast(fitAvg,h=20))
+arima(latdol.zoo$Avg, order = c(0,1,1))
+
+fitEnd <- auto.arima(latdol.zoo$End)
+plot(forecast(fitEnd,h=20))
+arima(latdol.zoo$End, order = c(0,1,0))
+
+```
