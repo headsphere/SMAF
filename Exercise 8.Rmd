@@ -16,12 +16,12 @@ library(tseries)
 
 ```{r}
 djao.ts = read.ts("DJAO.dat", names=c("DJ", "AO"))
+djao.zoo = as.zoo(djao.ts)
+lreturns.zoo = diff(log(djao.zoo))
 
-lreturns.ts = diff(log(djao.ts))
+ccf(lreturns.zoo$DJ,lreturns.zoo$AO)
 
-ccf(lreturns.ts[,"DJ"],lreturns.ts[,"AO"])
-
-lreturns.ar = ar(lreturns.ts, order.max = 10)
+lreturns.ar = ar(lreturns.zoo, order.max = 10)
 
 lreturns.ar
 ```
@@ -29,3 +29,8 @@ lreturns.ar
 $$X_t = `r lreturns.ar$ar[1]` X_{t-1} + `r lreturns.ar$ar[3]` Y_{t-1} + \epsilon_t$$
 
 $$Y_t = `r lreturns.ar$ar[2]` X_{t-1} + `r lreturns.ar$ar[4]` Y_{t-1} + \epsilon_t$$
+
+```{r}
+arimax(lreturns.zoo$DJ, order = c(0,1,1), xtransf = as.zoo(data.frame(Ind = 1*(seq_along(lreturns.zoo$DJ)==1))), transfer = list(c(1,0)))
+```
+

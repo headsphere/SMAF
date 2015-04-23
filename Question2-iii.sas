@@ -1,7 +1,7 @@
 ODS LISTING CLOSE;
 ODS HTML;
 data LatDol;
-infile '\\psf\Home\Documents\RStudioProjects\SMAF - Time Series\latdol.txt' delimiter='09'x MISSOVER DSD lrecl=32767 ;
+infile 'latdol.txt' delimiter='09'x MISSOVER DSD lrecl=32767 ;
        informat year best32. ;
        informat month   best32. ;
        informat avg  best32. ;
@@ -23,14 +23,16 @@ proc timeplot data=LatDol;
 plot avg;
 
 proc arima data=LatDol;
-identify var=end(1) nlag=18;
-estimate noint;
-forecast lead=10 out=results;
+identify var=end nlag=18;
+estimate p=1;
 
-proc arima data=LatDol;
 identify var=avg(1) nlag=18;
 estimate q=1 noint;
-forecast lead=10 out=results;
+
+identify var=avg(1) crosscor=end nlag=18;
+estimate q=1 input=(2 $ / (1) end) noint;
+
+forecast lead=3 out=results;
 
 run;
 

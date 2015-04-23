@@ -1,0 +1,30 @@
+                                  Model Parameter Estimates
+
+                                              Standard
+Equation    Parameter         Estimate           Error    t Value    Pr > |t|    Variable
+
+end         AR1_1_1            0.03600         0.11185       0.32      0.7480    end(t-1)
+            AR1_1_2            0.11050         0.12356       0.89      0.3727    avg(t-1)
+avg         AR1_2_1            0.70995         0.07553       9.40      0.0001    end(t-1)
+            AR1_2_2           -0.22236         0.08344      -2.66      0.0086    avg(t-1)
+
+
+                                  Covariances of Innovations
+
+                           Variable             end             avg
+
+                           end              0.00007         0.00004
+                           avg              0.00004         0.00003
+
+
+                                           Forecasts
+
+                                                 Standard
+      Variable        Obs        Forecast           Error        95% Confidence Limits
+
+      end             145         0.59274         0.00810         0.57686         0.60863
+                      146         0.59270         0.01204         0.56911         0.61630
+                      147         0.59269         0.01530         0.56270         0.62268
+      avg             145         0.59273         0.00547         0.58201         0.60346
+                      146         0.59261         0.01102         0.57101         0.61421
+                      147         0.59261         0.01435         0.56448         0.62074
