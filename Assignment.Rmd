@@ -21,13 +21,13 @@ read_chunk("Question2-iii.sas", labels = "Question2-iii")
 
 ###i)
 
-The following SAS code was used to identify and estimate appropriate univariate ARIMA models for each of the avg and end exchange rate time series:
+The following SAS code was used to identify and estimate appropriate univariate ARIMA models for each of the `avg` and `end` exchange rate time series:
 
 ```{r Question2-i, engine='sas', eval=FALSE}
 
 ```
 
-The diagnostics plots indicates that the first difference of Avg has an ACF cut-off at lag 1, thereby leading us to believe the data follows an Arima(0,1,1) model with the following model equation:
+The diagnostics plots indicates that the first difference of `avg` has an ACF cut-off at lag 1, thereby leading us to believe the data follows an Arima(0,1,1) model with the following model equation:
 
 $$\Delta Y_t = -0.36347 \epsilon_{t-1} +  \epsilon_t$$
 
@@ -49,7 +49,7 @@ Lag      Square     DF     ChiSq    --------------------Autocorrelations--------
 
 ```
 
-End is found to follow an AR(1) model with the following model equation:
+`end` is found to follow an AR(1) model with the following model equation:
 
 $$Y_t = 0.58167 + 0.96945 Y_{t-1} + \epsilon_t$$
 
@@ -117,13 +117,85 @@ The following outputs show the forecasts of the average exchange rate for the ne
 
 ###iii)
 
+The following SAS code was used to identify and estimate an appropriate transfer function model where `avg` was specified as the output variable and `end` the input variable:
+
 ```{r Question2-iii, engine='sas', eval=FALSE}
 
 ```
 
-\newpage
+The following diagnostics plots show from the lag 1 cutoff that an ARIMA(0,1,1) model is appropriate for the first difference of `end`: 
 
-```{r}
+![](Question2iii-diagnostics-end.png)
+
+Hence the estimation procedure shows the following model for `end`:
+
+$$\Delta X_t = \eta_t +  0.09801 \eta_{t-1}$$
+
+The following output shows the p-values from the portmanteau statistics indicate the model fits well: 
+
+```
+                 Autocorrelation Check of Residuals
+
+ To        Chi-             Pr >
+Lag      Square     DF     ChiSq    --------------------Autocorrelations--------------------
+
+  6        0.95      5    0.9668     0.003     0.029    -0.003    -0.065     0.035    -0.003
+ 12        7.14     11    0.7880    -0.069     0.066     0.134     0.066     0.062     0.069
+ 18        9.75     17    0.9136    -0.045    -0.017    -0.018    -0.034     0.101    -0.044
+ 24       14.42     23    0.9143    -0.015    -0.067    -0.102    -0.033    -0.013    -0.105
+```
+
+The next statement shows the output of the second `identify` statement which shows the following cross-correlation function:
+
+![](Question2iii-crosscor.png)
+
+This indicates that the transfer function is in the form of a lag-1 pulse function. There is a sharp (not decayed) response after lag 1 which indicates a transfer function of the form: 
+
+$$Y_t = \omega X_t + U_t$$
+
+NB: The lack of intercept is due to the first differencing, and the lack of denominator terms due to the pulse intervention
+
+With the subsequent estimation run, SAS provides us the estimated model of:
+
+$$Y_t = (1.1118 - 0.14899 L) X_{t-1} + U_t$$
+
+Where $$U_t = (1 - 0.95978 L) \epsilon_t$$
+
+```
+                                The ARIMA Procedure
+
+                               Moving Average Factors
+
+                            Factor 1:  1 - 0.95978 B**(1)
+
+
+                                   Input Number 1
+
+                          Input Variable               end
+                          Shift                          1
+                          Period(s) of Differencing      1
+
+
+                                  Numerator Factors
+
+                          Factor 1:  1.1118 - 0.14899 B**(1)
+```
+
+The forecast values for `avg` are given as:
+
+```
+                             Forecasts for variable avg
+
+            Obs       Forecast    Std Error       95% Confidence Limits
+
+            145         0.5924       0.0051         0.5824         0.6024
+            146         0.5922       0.0104         0.5719         0.6125
+            147         0.5923       0.0135         0.5658         0.6188
+
+
+```
+
+```{r eval = FALSE, echo=FALSE}
 library(zoo)
 library(forecast)
 latdol.zoo <- read.zoo("LatDol.dat", 
