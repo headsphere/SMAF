@@ -3,3 +3,6 @@
 .RData
 *.html
 *.swp
+Assignment_cache
+Assignment_files
+Figs
