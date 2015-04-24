@@ -8,6 +8,8 @@ output: pdf_document
 ```{r global_options, include=FALSE}
 options(digits = 3)
 
+library(knitr)
+library(xtable)
 ```
 ##Question 1
 
@@ -90,12 +92,27 @@ $$\boldsymbol{\Gamma} =
  \end{pmatrix} 
 $$
 
+###iii)
+
+```{r results='asis', echo=FALSE}
+  diag = as.data.frame(rbind(
+        c(Melbourne.mle1$mllk, Melbourne.mle1$AIC, Melbourne.mle1$BIC),
+        c(Melbourne.mle2$mllk, Melbourne.mle2$AIC, Melbourne.mle2$BIC),
+        c(Melbourne.mle3$mllk, Melbourne.mle3$AIC, Melbourne.mle3$BIC)))
+  
+  colnames(diag) = c("mllk", "AIC", "BIC")
+  
+  print(xtable(diag), comment=FALSE)
+```
+As can be seen in the table, $m = 3$ minimises both the AIC and the BIC and therefore should be chosen as the most appropriate.
+
+As $\pi_1 \approx 0$ and two of the $\gamma_{ij}$ are also close to zero, three of the natural parameters are close to their boundary values and this could cause convergence issues. A modified HMM could be used where $\pi_1 = 0$. 
+
 \newpage
 
 ##Question 2
 
 ```{r echo=FALSE}
-library(knitr)
 read_chunk("Question2-i.sas", labels = "Question2-i")
 read_chunk("Question2-ii.sas", labels = "Question2-ii")
 read_chunk("Question2-ii-results.lst", labels = "Question2-ii-results", from = 1, to=19)
