@@ -1,7 +1,14 @@
+# ---- Question1-dataload ----
+
+source("binaryHMMRcode.r")
 MelbourneRain <- read.table("MelbourneAirport.txt",header=TRUE)
 attach(MelbourneRain)
+
+# ---- Question1-i ----
 mean(Rain)
 tapply(Rain,Month,mean)
+
+
 m <- 1
 pi0 <- c(mean(Rain))
 gamma0 <- matrix(c(1),nrow=m)

@@ -7,6 +7,20 @@ output: pdf_document
 
 ##Question 1
 
+```{r echo=FALSE}
+source("binaryHMMRcode.r")
+MelbourneRain <- read.table("MelbourneAirport.txt",header=TRUE)
+attach(MelbourneRain)
+```
+
+###i)
+
+The overall proportion of rainy days to sunny days is `r mean(Rain)`. The proportion of rainy days seems to increase over the (Southern Hemisphere) winter months and decreases over the summer months.
+
+```{r}
+mean(Rain)
+plot(tapply(Rain,Month,mean))
+```
 
 \newpage
 
