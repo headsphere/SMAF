@@ -1,5 +1,5 @@
 ---
-title: "Stochastic Process and Forecasting Assignment"
+title: "Stochastic Processes and Forecasting Assignment"
 author: "Nick Head"
 date: "15 April 2015"
 output: pdf_document
@@ -7,6 +7,8 @@ output: pdf_document
 
 ```{r global_options, include=FALSE}
 options(digits = 3)
+options(xtable.comment = FALSE)
+options(xtable.table.placement = "!h")
 
 library(knitr)
 library(xtable)
@@ -102,11 +104,74 @@ $$
   
   colnames(diag) = c("mllk", "AIC", "BIC")
   
-  print(xtable(diag), comment=FALSE)
+  xtable(diag)
 ```
 As can be seen in the table, $m = 3$ minimises both the AIC and the BIC and therefore should be chosen as the most appropriate.
 
 As $\pi_1 \approx 0$ and two of the $\gamma_{ij}$ are also close to zero, three of the natural parameters are close to their boundary values and this could cause convergence issues. A modified HMM could be used where $\pi_1 = 0$. 
+
+###iv)
+
+```{r}
+m <- 3
+pi <- Melbourne.mle3$pi
+gamma <- Melbourne.mle3$gamma
+Melbourne.mle3probs <- binary.HMM.state_probs(MelbourneRain$Rain,m,pi,gamma)
+Melbourne.mle3local <- binary.HMM.local_decoding(MelbourneRain$Rain,m,pi,gamma)
+Melbourne.mle3global <- binary.HMM.viterbi(MelbourneRain$Rain,m,pi,gamma)
+p1 <- round(Melbourne.mle3probs[1,],3)
+p2 <- round(Melbourne.mle3probs[2,],3)
+p3 <- round(Melbourne.mle3probs[3,],3)
+ld <- Melbourne.mle3local
+gd <- Melbourne.mle3global
+Melbournedecode <- cbind(MelbourneRain,p1,p2,p3,ld,gd)
+Melbournedecode.txt <- write.table(Melbournedecode,file="Melbournedecode.txt",
+                                  quote = FALSE,sep="\t", row.names = FALSE)
+
+decode = read.table(file="Melbournedecode.txt", header = TRUE)
+```
+```{r results='asis', echo=FALSE}
+xtable(head(decode))
+```
+
+\newpage
+
+###v)
+
+The following tables show that local and global decoding do largely agree, except in the decoding of state 2, where local decoding will identify it around twice as often as global decoding.
+
+```{r echo=FALSE}
+table(ld)
+table(gd)
+table(ld,gd)
+```
+
+The following table shows the date periods which according to global decoding are in state 2: 
+
+```{r results='asis', echo=FALSE}
+dates = as.data.frame(rbind(
+c("1971-06-15","1971-11-28"),
+c("1980-06-29","1980-08-15"),
+c("1981-05-24","1981-08-22"), 
+c("1986-08-16","1986-11-01"),
+c("1989-05-23","1989-10-15"),
+c("1991-06-03","1991-09-27"),
+c("1992-08-10","1992-10-10"),
+c("1996-06-05","1996-10-05")))
+
+colnames(dates) = c("From", "To")
+
+print(xtable(dates), floating=F)
+```
+
+
+The following contingency tables show that (according to both local and global decoding) state 1 is strongly associated with rainy days and state 2 is strongly associated with dry days. State 3 can be characterised as having mixed periods.
+
+```{r echo=FALSE}
+table(Rain, gd)
+table(Rain, ld)
+```
+
 
 \newpage
 
@@ -134,6 +199,8 @@ The diagnostics plots indicates that the first difference of `avg` has an ACF cu
 $$\Delta Y_t = -0.36347 \epsilon_{t-1} +  \epsilon_t$$
 
 ![](Question2i-diagnostics-avg.png)
+
+\newpage
 
 In addition the Ljung-Box chi-square statistics do not have any significant p-values, giving further weight to the chosen model:
 
