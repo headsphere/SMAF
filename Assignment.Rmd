@@ -5,6 +5,13 @@ date: "15 April 2015"
 output: pdf_document
 ---
 
+##Question 1
+
+
+\newpage
+
+##Question 2
+
 ```{r echo=FALSE}
 library(knitr)
 read_chunk("Question2-i.sas", labels = "Question2-i")
@@ -14,10 +21,6 @@ read_chunk("Question2-ii-results.lst", labels = "Question2-ii-forecasts", from =
 read_chunk("Question2-ii-diagnosis.lst", labels = "Question2-ii-diagnosis")
 read_chunk("Question2-iii.sas", labels = "Question2-iii")
 ```
-
-\newpage
-
-##Question 2
 
 ###i)
 
